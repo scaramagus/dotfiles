@@ -61,7 +61,7 @@ _get_nodejs_prompt() {
         local JS_VER=$(node -v)
     fi
     if [ "$JS_VER" != "" ]; then
-        echo "${RED}${JS_LOGO} ${JS_VER:1}"
+        echo "${WHITE_B}${JS_LOGO} ${JS_VER:1}"
     fi
 }
 
@@ -78,7 +78,7 @@ _get_git_prompt() {
 }
 
 python_interpreter_like_prompt() {
-	PS1=$(echo -e "${GREEN_B}${USER_LOGO} \u $(_get_virtualenv_prompt) $(_get_python_version)  $(_get_nodejs_prompt)  $(_get_git_prompt)  ${BLUE_B}$DIR_LOGO \w\n${GREEN_B}$\[\033[00m\] ")
+	PS1=$(echo -e "${PURPLE_B}${USER_LOGO} \u $(_get_virtualenv_prompt) $(_get_python_version)  $(_get_nodejs_prompt)  $(_get_git_prompt)  ${BLUE_B}$DIR_LOGO \w\n${GREEN_B}$\[\033[00m\] ")
 }
 
 # Set the prompt
