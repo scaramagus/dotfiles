@@ -25,10 +25,16 @@ VENV_PREFIX="("
 VENV_SUFFIX=")"
 
 PYTHON_LOGO="\ue73c"
-NODEJS_LOGO="\ue74e"
+JS_LOGO="\ue74e"
 USER_LOGO="\uf007"
 DIR_LOGO="\ue5fe"
 GIT_LOGO="\ue725"
+
+GIT_ADD_LOGO="\uf067"
+GIT_MOD_LOGO="\uf8ea"
+GIT_EQ_LOGO=""
+GIT_AHEAD_LOGO="\uf04e"
+GIT_BEHIND_LOGO="\uf95e"
 
 _get_virtualenv_prompt() {
     if [ -n "$VIRTUAL_ENV" ]; then
@@ -50,20 +56,25 @@ _get_python_version() {
 
 _get_nodejs_prompt() {
     if hash node 2>/dev/null; then
-        local NAME=$(node -v)
+        local JS_VER=$(node -v)
     fi
-    if [ "$NAME" != "" ]; then
-        echo "${RED}${NODEJS_LOGO} ${NAME:1}"
+    if [ "$JS_VER" != "" ]; then
+        echo "${RED}${JS_LOGO} ${JS_VER:1}"
     fi
 }
 
 _get_git_prompt() {
-	local NAME=$(__git_ps1 "$GIT_LOGO %s")
-	echo " ${CYAN}${NAME/\$/}"
+	local GIT_STATUS=$(__git_ps1 "${CYAN_B}$GIT_LOGO %s")
+	GIT_STATUS="${GIT_STATUS/\+/${CYAN} $GIT_ADD_LOGO}"
+	GIT_STATUS="${GIT_STATUS/\=/${CYAN} $GIT_EQ_LOGO}"
+	GIT_STATUS="${GIT_STATUS/\*/${CYAN} $GIT_MOD_LOGO}"
+	GIT_STATUS="${GIT_STATUS/\>/${CYAN} $GIT_AHEAD_LOGO}"
+	GIT_STATUS="${GIT_STATUS/\</${CYAN} $GIT_BEHIND_LOGO}"
+	echo "${GIT_STATUS/\$/}"
 }
 
 python_interpreter_like_prompt() {
-	PS1=$(echo -e "${GREEN_B}${USER_LOGO} \u  $(_get_python_version)$(_get_virtualenv_prompt) $(_get_nodejs_prompt)  ${BLUE_B}$DIR_LOGO \w $(_get_git_prompt)\n${GREEN_B}$\[\033[00m\] ")
+	PS1=$(echo -e "${GREEN_B}${USER_LOGO} \u $(_get_virtualenv_prompt) $(_get_python_version)  $(_get_nodejs_prompt)  $(_get_git_prompt)  ${BLUE_B}$DIR_LOGO \w\n${GREEN_B}$\[\033[00m\] ")
 }
 
 # Set the prompt
