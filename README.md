@@ -1,5 +1,6 @@
 dotfiles
 ========
+My personal dotfiles. Inspired by [malderete's dotfiles.](https://github.com/malderete/dotfiles)
 
 ## Requirements
 - [Nerdfonts](https://nerdfonts.com/)
