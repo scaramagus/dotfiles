@@ -1,14 +1,10 @@
 [core]
-	editor = nano
+	editor = nvim 
 	excludefile = ~/.gitignore_global
 	pager = diff-so-fancy | less --tabs=4 -RFX
 [user]
 	name = Agustin Scaramuzza
 	email = agustinscaramuzza@gmail.com
-[diff]
-    tool = meld
-[diff "meld"]
-    external = git-meld-diff.py
 [difftool]
 	prompt = false
 [log]
