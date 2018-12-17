@@ -47,7 +47,7 @@ _get_virtualenv_prompt() {
         else
             local NAME=$(basename $VIRTUAL_ENV)
         fi
-        echo " ${YELLOW}${VENV_PREFIX}$NAME${VENV_SUFFIX}"
+        echo "${YELLOW_B}${VENV_PREFIX}$NAME${VENV_SUFFIX} "
     fi
 }
 
@@ -78,7 +78,7 @@ _get_git_prompt() {
 }
 
 python_interpreter_like_prompt() {
-	PS1=$(echo -e "${PURPLE}${USER_LOGO} \u $(_get_virtualenv_prompt) $(_get_python_version)  $(_get_nodejs_prompt)  $(_get_git_prompt)  ${BLUE}$DIR_LOGO \w\n${GREEN_B}$\[\033[00m\] ")
+	PS1=$(echo -e "${PURPLE}${USER_LOGO} \u  $(_get_python_version) $(_get_virtualenv_prompt) $(_get_nodejs_prompt)  $(_get_git_prompt)  ${BLUE}$DIR_LOGO \w\n${GREEN_B}$\[\033[00m\] ")
 }
 
 # Set the prompt
