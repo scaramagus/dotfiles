@@ -29,8 +29,6 @@ NODEJS_LOGO="\ue74e"
 USER_LOGO="\uf007"
 DIR_LOGO="\ue5fe"
 GIT_LOGO="\ue725"
-EDIT_LOGO="\ufb4e"
-NEW_LOGO="\uf067"
 
 _get_virtualenv_prompt() {
     if [ -n "$VIRTUAL_ENV" ]; then
@@ -61,13 +59,11 @@ _get_nodejs_prompt() {
 
 _get_git_prompt() {
 	local NAME=$(__git_ps1 "$GIT_LOGO %s")
-	NAME="${NAME/\$/}"
-	NAME="${NAME/\+/$CYAN$NEW_LOGO}"
-	echo " ${CYAN_B}${NAME/\*/$CYAN$EDIT_LOGO }"
+	echo " ${CYAN}${NAME/\$/}"
 }
 
 python_interpreter_like_prompt() {
-	PS1=$(echo -e "${GREEN_B}${USER_LOGO} \u $(_get_python_version)$(_get_virtualenv_prompt) $(_get_nodejs_prompt) ${BLUE_B}$DIR_LOGO \w $(_get_git_prompt)\n${GREEN_B}$\[\033[00m\] ")
+	PS1=$(echo -e "${GREEN_B}${USER_LOGO} \u  $(_get_python_version)$(_get_virtualenv_prompt) $(_get_nodejs_prompt)  ${BLUE_B}$DIR_LOGO \w $(_get_git_prompt)\n${GREEN_B}$\[\033[00m\] ")
 }
 
 # Set the prompt
