@@ -30,14 +30,6 @@ USER_LOGO="\uf007"
 DIR_LOGO="\ue5fe"
 GIT_LOGO="\ue725"
 
-GIT_ADD_LOGO="\uf067"
-GIT_MOD_LOGO="\uf8ea"
-GIT_EQ_LOGO=""
-GIT_AHEAD_LOGO="\uf04e"
-GIT_BEHIND_LOGO="\uf95e"
-GIT_STASH_LOGO="\ufc24"
-GIT_DIVERGE_LOGO="\ufb40"
-
 _get_virtualenv_prompt() {
     if [ -n "$VIRTUAL_ENV" ]; then
         if [ -f "$VIRTUAL_ENV/__name__" ]; then
@@ -66,19 +58,12 @@ _get_nodejs_prompt() {
 }
 
 _get_git_prompt() {
-	local GIT_STATUS=$(__git_ps1 "${CYAN}$GIT_LOGO %s")
-	GIT_STATUS="${GIT_STATUS/\+/$GIT_ADD_LOGO}"
-	GIT_STATUS="${GIT_STATUS/\=/$GIT_EQ_LOGO}"
-	GIT_STATUS="${GIT_STATUS/\*/$GIT_MOD_LOGO}"
-	GIT_STATUS="${GIT_STATUS/\<\>/ $GIT_DIVERGE_LOGO}"
-	GIT_STATUS="${GIT_STATUS/\>/ $GIT_AHEAD_LOGO}"
-	GIT_STATUS="${GIT_STATUS/\</ $GIT_BEHIND_LOGO}"
-	GIT_STATUS="${GIT_STATUS/\$/ $GIT_STASH_LOGO}"
-	echo $GIT_STATUS
+	local GIT_STATUS=$(__git_ps1 "%s") 
+	[ ! -z "$GIT_STATUS" ] && echo "${CYAN}$GIT_LOGO $GIT_STATUS  "
 }
 
 python_interpreter_like_prompt() {
-	PS1=$(echo -e "${PURPLE}${USER_LOGO} \u  $(_get_python_version) $(_get_virtualenv_prompt) $(_get_nodejs_prompt)  $(_get_git_prompt)  ${BLUE}$DIR_LOGO \w\n${GREEN_B}$\[\033[00m\] ")
+	PS1=$(echo -e "${PURPLE}${USER_LOGO} \u  $(_get_python_version) $(_get_virtualenv_prompt) $(_get_nodejs_prompt)  $(_get_git_prompt)${BLUE}$DIR_LOGO \w\n${GREEN_B}$\[\033[00m\] ")
 }
 
 # Set the prompt
