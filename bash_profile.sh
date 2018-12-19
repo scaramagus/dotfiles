@@ -3,7 +3,7 @@
 #Not interactive then nothing to load!
 [ -z "$PS1" ] && return
 
-DOTFILES=$(dirname $(readlink -f .bash_profile))
+DOTFILES=$(dirname $(readlink -f "${BASH_SOURCE[0]}"))
 
 source_file() {
   if [ -f $1 ]; then
