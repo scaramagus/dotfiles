@@ -62,9 +62,9 @@ _get_git_prompt() {
 	[ ! -z "$GIT_STATUS" ] && echo "${CYAN}$GIT_LOGO $GIT_STATUS  "
 }
 
-python_interpreter_like_prompt() {
+prompt_command() {
 	PS1=$(echo -e "${PURPLE}${USER_LOGO} \u  $(_get_python_version) $(_get_virtualenv_prompt) $(_get_nodejs_prompt)  $(_get_git_prompt)${BLUE}$DIR_LOGO \w\n${GREEN_B}$\[\033[00m\] ")
 }
 
 # Set the prompt
-PROMPT_COMMAND=python_interpreter_like_prompt
+PROMPT_COMMAND=prompt_command
