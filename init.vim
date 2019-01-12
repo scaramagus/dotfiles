@@ -98,24 +98,26 @@ function! PackInit() abort
 
     " Linters
     call minpac#add('neomake/neomake', {'type': 'opt', 'do': 'Neomake'})
+    call minpac#add('w0rp/ale')
     call minpac#add('myusuf3/numbers.vim')
 
     call minpac#add('blueyed/vim-diminactive')
     call minpac#add('ternjs/tern_for_vim')
     call minpac#add('carlitux/deoplete-ternjs')
-    " call minpac#add('posva/vim-vue')
+    call minpac#add('benjie/local-npm-bin.vim')
 
     call minpac#add('christoomey/vim-tmux-navigator')
     call minpac#add('christoomey/vim-tmux-runner')
 
-    " Always load vim-devicons last!!!"
     call minpac#add('tiagofumo/vim-nerdtree-syntax-highlight')
+
+    " Always load vim-devicons last!!!"
     call minpac#add('ryanoasis/vim-devicons')
 endfunction
 
-" For some reason neomake does not load on nvim start
-" Temporary fix is to install in opt directory and start manually
+" Packages needed to load on startup (due to config modifications down below)
 packadd neomake
+packadd local-npm-bin.vim
 
 " ============================================================================
 " Vim settings and mappings
@@ -224,6 +226,13 @@ nmap ,t :NERDTreeFind<CR>
 " don;t show these file types
 let NERDTreeIgnore = ['\.pyc$', '\.pyo$', '__pycache__', 'node_modules']
 
+" Open automatically if no file is specified
+autocmd StdinReadPre * let s:std_in=1
+autocmd VimEnter * if argc() == 0 && !exists("s:std_in") | NERDTree | endif
+
+" Close if the only open window is NERDTREE
+autocmd BufEnter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
+
 " Tasklist ------------------------------
 
 " show pending tasks list
@@ -240,6 +249,7 @@ let g:neomake_python_flake8_maker = neomake#makers#ft#python#flake8()
 let g:neomake_python_python_maker.exe = 'python3 -m py_compile'
 let g:neomake_python_flake8_maker.exe = 'python3 -m flake8'
 let g:neomake_javascript_enabled_makers = ['eslint']
+let b:neomake_javascript_eslint_exe = GetNpmBin('eslint')
 " Fzf ------------------------------
 
 " file finder mapping
@@ -391,9 +401,9 @@ au BufRead,BufNewFile *.py,*.pyw let b:comment_leader = '#'
 
 " JS
 au BufRead,BufNewFile *.js set expandtab
-au BufRead,BufNewFile *.js set tabstop=4
-au BufRead,BufNewFile *.js set softtabstop=4
-au BufRead,BufNewFile *.js set shiftwidth=4
+au BufRead,BufNewFile *.js set tabstop=2
+au BufRead,BufNewFile *.js set softtabstop=2
+au BufRead,BufNewFile *.js set shiftwidth=2
 au BufRead,BufNewFile *.js set autoindent
 au BufRead,BufNewFile *.js match BadWhitespace /^\t\+/
 au BufRead,BufNewFile *.js match BadWhitespace /\s\+$/
@@ -417,9 +427,9 @@ au BufRead,BufNewFile *.xml let b:comment_leader = '<!--'
 " HTML
 au BufRead,BufNewFile *.html set filetype=xml
 au BufRead,BufNewFile *.html set expandtab
-au BufRead,BufNewFile *.html set tabstop=4
-au BufRead,BufNewFile *.html set softtabstop=4
-au BufRead,BufNewFile *.html set shiftwidth=4
+au BufRead,BufNewFile *.html set tabstop=2
+au BufRead,BufNewFile *.html set softtabstop=2
+au BufRead,BufNewFile *.html set shiftwidth=2
 au BufRead,BufNewFile *.html set autoindent
 au BufRead,BufNewFile *.html match BadWhitespace /^\t\+/
 au BufRead,BufNewFile *.html match BadWhitespace /\s\+$/
@@ -427,7 +437,15 @@ au         BufNewFile *.html set fileformat=unix
 au BufRead,BufNewFile *.html let b:comment_leader = '<!--'
 
 " Vue.js (*.vue)
-au BufNewFile,BufRead *.vue set filetype=html
+au BufNewFile,BufRead *.vue set filetype=xml
+au BufRead,BufNewFile *.vue set expandtab
+au BufRead,BufNewFile *.vue set tabstop=2
+au BufRead,BufNewFile *.vue set softtabstop=2
+au BufRead,BufNewFile *.vue set shiftwidth=2
+au BufRead,BufNewFile *.vue set autoindent
+au BufRead,BufNewFile *.vue match BadWhitespace /^\t\+/
+au BufRead,BufNewFile *.vue match BadWhitespace /\s\+$/
+au         BufNewFile *.vue set fileformat=unix
 
 " Define user commands for updating/cleaning the plugins.
 " Each of them calls PackInit() to load minpac and register
