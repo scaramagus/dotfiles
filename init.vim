@@ -137,6 +137,9 @@ set foldlevel=99
 " Enable folding with the spacebar
 nnoremap <space> za
 
+"This unsets the last search pattern register by hitting return
+nnoremap <CR> :noh<CR><CR>
+
 " show line numbers
 set nu
 
@@ -223,8 +226,12 @@ let g:tagbar_autofocus = 1
 map <F3> :NERDTreeToggle<CR>
 " open nerdtree with the current file selected
 nmap ,t :NERDTreeFind<CR>
+
+" Show hidden files
+let NERDTreeShowHidden = 1
+
 " don;t show these file types
-let NERDTreeIgnore = ['\.pyc$', '\.pyo$', '__pycache__', 'node_modules']
+let NERDTreeIgnore = ['\.pyc$', '\.pyo$', '__pycache__', 'node_modules', 'dist', '\.lock$', '\.ipython$', '\.mypy_cache$', '\.pytest_cache$', '\.vscode$', '\.tern-port$', '\.coverage$', '\.git$', '\.gitattributes$']
 
 " Open automatically if no file is specified
 autocmd StdinReadPre * let s:std_in=1
@@ -233,6 +240,20 @@ autocmd VimEnter * if argc() == 0 && !exists("s:std_in") | NERDTree | endif
 " Close if the only open window is NERDTREE
 autocmd BufEnter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
 
+" Enable folder icons for NERDTree and correct color
+let g:WebDevIconsUnicodeDecorateFolderNodes = 1
+let g:DevIconsEnableFoldersOpenClose = 1
+highlight! link NERDTreeFlags NERDTreeDir
+
+" Remove expandable arrow
+let g:WebDevIconsNerdTreeBeforeGlyphPadding = ""
+let g:WebDevIconsUnicodeDecorateFolderNodes = v:true
+let NERDTreeDirArrowExpandable = "\u00a0"
+let NERDTreeDirArrowCollapsible = "\u00a0"
+let NERDTreeNodeDelimiter = "\x07"
+
+" Remove trailing slash from dir nodes
+autocmd FileType nerdtree setlocal conceallevel=3 | syntax match NERDTreeDirSlash #/$# containedin=NERDTreeDir conceal contained
 " Tasklist ------------------------------
 
 " show pending tasks list
@@ -274,6 +295,8 @@ let g:deoplete#enable_refresh_always = 1
 let g:deoplete#max_abbr_width = 0
 let g:deoplete#max_menu_width = 0
 let g:deoplete#omni#input_patterns = get(g:, 'deoplete#omni#input_patterns', {})
+
+" Ternjs -----------------------------
 let g:tern_request_timeout = 1
 let g:tern_request_timeout = 6000
 let g:tern#command = ["tern"]
@@ -342,6 +365,7 @@ let g:yankring_history_dir = '~/.config/nvim/'
 
 " Airline ------------------------------
 let g:airline#extensions#whitespace#enabled = 0
+
 
 " Automatically rebalance windows on neovim resize
 autocmd VimResized * :wincmd =
@@ -425,7 +449,7 @@ au         BufNewFile *.xml set fileformat=unix
 au BufRead,BufNewFile *.xml let b:comment_leader = '<!--'
 
 " HTML
-au BufRead,BufNewFile *.html set filetype=xml
+au BufRead,BufNewFile *.html set filetype=html
 au BufRead,BufNewFile *.html set expandtab
 au BufRead,BufNewFile *.html set tabstop=2
 au BufRead,BufNewFile *.html set softtabstop=2
@@ -436,8 +460,8 @@ au BufRead,BufNewFile *.html match BadWhitespace /\s\+$/
 au         BufNewFile *.html set fileformat=unix
 au BufRead,BufNewFile *.html let b:comment_leader = '<!--'
 
-" Vue.js (*.vue)
-au BufNewFile,BufRead *.vue set filetype=xml
+" Vue
+au BufRead,BufNewFile *.vue set filetype=html
 au BufRead,BufNewFile *.vue set expandtab
 au BufRead,BufNewFile *.vue set tabstop=2
 au BufRead,BufNewFile *.vue set softtabstop=2
