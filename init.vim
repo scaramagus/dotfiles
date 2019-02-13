@@ -1,9 +1,6 @@
-" Fisa-nvim-config
+" Based on fisa-nvim-config
 " http://nvim.fisadev.com
-" version: 10.0
 
-" TODO current problems:
-" * end key not working undef tmux+fish
 
 function! PackInit() abort
     packadd minpac
@@ -42,16 +39,6 @@ function! PackInit() abort
     " Pending tasks list
     call minpac#add('fisadev/FixedTaskList.vim')
 
-    " Async autocompletion
-    call minpac#add('Shougo/deoplete.nvim', {'do': 'UpdateRemotePlugins'})
-    " Completion from other opened files
-    call minpac#add('Shougo/context_filetype.vim')
-    " Python autocompletion
-    call minpac#add('zchee/deoplete-jedi', {'do': 'UpdateRemotePlugins'})
-    " Just to add the python go-to-definition and similar features, autocompletion
-    " from this call minpac#add(n is disabled)
-    call minpac#add('davidhalter/jedi-vim')
-
     " Automatically close parenthesis, etc
     call minpac#add('Townk/vim-autoclose')
 
@@ -78,9 +65,6 @@ function! PackInit() abort
     " Window chooser
     call minpac#add('t9md/vim-choosewin')
 
-    " Automatically sort python imports
-    call minpac#add('fisadev/vim-isort')
-
     " Highlight matching html tags
     call minpac#add('valloric/MatchTagAlways')
 
@@ -97,13 +81,10 @@ function! PackInit() abort
     call minpac#add('vim-scripts/YankRing.vim')
 
     " Linters
-    call minpac#add('neomake/neomake', {'type': 'opt', 'do': 'Neomake'})
     call minpac#add('w0rp/ale')
     call minpac#add('myusuf3/numbers.vim')
 
     call minpac#add('blueyed/vim-diminactive')
-    call minpac#add('ternjs/tern_for_vim')
-    call minpac#add('carlitux/deoplete-ternjs')
     call minpac#add('benjie/local-npm-bin.vim')
 
     call minpac#add('christoomey/vim-tmux-navigator')
@@ -116,7 +97,7 @@ function! PackInit() abort
 endfunction
 
 " Packages needed to load on startup (due to config modifications down below)
-packadd neomake
+"packadd neomake
 packadd local-npm-bin.vim
 
 " ============================================================================
@@ -144,7 +125,7 @@ nnoremap <CR> :noh<CR><CR>
 set nu
 
 " remove ugly vertical lines on window division
-set fillchars+=vert:\ 
+set fillchars+=vert:\
 
 " Use true color "
 set termguicolors
@@ -190,7 +171,7 @@ set wildmode=list:longest
 ca w!! w !sudo tee "%"
 
 " tab navigation mappings
-map tt :tabnew 
+map tt :tabnew
 map <M-Right> :tabn<CR>
 imap <M-Right> <ESC>:tabn<CR>
 map <M-Left> :tabp<CR>
@@ -259,18 +240,6 @@ autocmd FileType nerdtree setlocal conceallevel=3 | syntax match NERDTreeDirSlas
 " show pending tasks list
 map <F2> :TaskList<CR>
 
-" Neomake ------------------------------
-
-" Run linter on write
-call neomake#configure#automake('w')
-
-" Check code as python3 by default
-let g:neomake_python_python_maker = neomake#makers#ft#python#python()
-let g:neomake_python_flake8_maker = neomake#makers#ft#python#flake8()
-let g:neomake_python_python_maker.exe = 'python3 -m py_compile'
-let g:neomake_python_flake8_maker.exe = 'python3 -m flake8'
-let g:neomake_javascript_enabled_makers = ['eslint']
-let b:neomake_javascript_eslint_exe = GetNpmBin('eslint')
 " Fzf ------------------------------
 
 " file finder mapping
@@ -286,61 +255,62 @@ nmap ,F :Lines<CR>
 " commands finder mapping
 nmap ,c :Commands<CR>
 
-" Deoplete -----------------------------
-let g:deoplete#enable_at_startup = 1
-let g:deoplete#enable_ignore_case = 1
-let g:deoplete#enable_smart_case = 1
-let g:deoplete#enable_camel_case = 1
-let g:deoplete#enable_refresh_always = 1
-let g:deoplete#max_abbr_width = 0
-let g:deoplete#max_menu_width = 0
-let g:deoplete#omni#input_patterns = get(g:, 'deoplete#omni#input_patterns', {})
+" ALE ------------------------
+" Enable autocompletion (must be set before loading ALE)
+let g:ale_completion_enabled = 1
+packadd ale
 
-" Ternjs -----------------------------
-let g:tern_request_timeout = 1
-let g:tern_request_timeout = 6000
-let g:tern#command = ["tern"]
-let g:tern#arguments = [" — persistent"]
+" Set symbols
+let g:ale_sign_error = '✘'
+let g:ale_sign_warning = '⚠'
 
-let g:context_filetype#same_filetypes = {}
-let g:context_filetype#same_filetypes._ = '_'
+" Define linters
+let g:ale_linters_explicit = 1
+let g:ale_linters = {
+            \'python': ['pyls', 'pylint', 'mypy', 'isort'],
+            \'javascript': ['eslint'],
+            \}
 
-" Jedi-vim ------------------------------
+" Define fixers
+let g:ale_fixers = {
+            \'*': ['remove_trailing_lines', 'trim_whitespace'],
+            \'python': ['black', 'isort'],
+            \'javascript': ['eslint'],
+            \}
+let g:ale_fix_on_save = 1
 
-" Disable autocompletion (using deoplete instead)
-let g:jedi#completions_enabled = 0
+" Show errors in status bar
+let g:airline#extensions#ale#enabled = 1
 
-" All these mappings work only for python code:
-" Go to definition
-let g:jedi#goto_command = ',d'
-" Find ocurrences
-let g:jedi#usages_command = ',o'
-" Find assignments
-let g:jedi#goto_assignments_command = ',a'
-" Go to definition in new tab
-nmap ,D :tab split<CR>:call jedi#goto()<CR>
+" Error message format
+let g:ale_echo_msg_error_str = 'E'
+let g:ale_echo_msg_format = '[%linter%] %s'
+
+"" Go to definition in new split
+nmap ,D <CR>:call ALEGoToDefinitionInSplit<CR>
 
 " Ack.vim ------------------------------
-
 " mappings
-nmap ,r :Ack 
+nmap ,r :Ack
 nmap ,wr :Ack <cword><CR>
 
 " Window Chooser ------------------------------
 
 " mapping
 nmap  -  <Plug>(choosewin)
+
 " show big letters
 let g:choosewin_overlay_enable = 1
 
 " Signify ------------------------------
 
 " this first setting decides in which order try to guess your current vcs
-" UPDATE it to reflect your preferences, it will speed up opening files
-let g:signify_vcs_list = [ 'git', 'hg' ]
+let g:signify_vcs_list = ['git']
+
 " mappings to jump to changed blocks
 nmap <leader>sn <plug>(signify-next-hunk)
 nmap <leader>sp <plug>(signify-prev-hunk)
+
 " nicer colors
 highlight DiffAdd           cterm=bold ctermbg=none ctermfg=119
 highlight DiffDelete        cterm=bold ctermbg=none ctermfg=167
@@ -365,7 +335,6 @@ let g:yankring_history_dir = '~/.config/nvim/'
 
 " Airline ------------------------------
 let g:airline#extensions#whitespace#enabled = 0
-
 
 " Automatically rebalance windows on neovim resize
 autocmd VimResized * :wincmd =
@@ -433,6 +402,16 @@ au BufRead,BufNewFile *.js match BadWhitespace /^\t\+/
 au BufRead,BufNewFile *.js match BadWhitespace /\s\+$/
 au         BufNewFile *.js set fileformat=unix
 au BufRead,BufNewFile *.js let b:comment_leader = '//'
+
+" JSON
+au BufRead,BufNewFile *.json set expandtab
+au BufRead,BufNewFile *.json set tabstop=4
+au BufRead,BufNewFile *.json set softtabstop=4
+au BufRead,BufNewFile *.json set shiftwidth=4
+au BufRead,BufNewFile *.json set autoindent
+au BufRead,BufNewFile *.json match BadWhitespace /^\t\+/
+au BufRead,BufNewFile *.json match BadWhitespace /\s\+$/
+au         BufNewFile *.json set fileformat=unix
 
 " Makefile
 au BufRead,BufNewFile Makefile* set noexpandtab
