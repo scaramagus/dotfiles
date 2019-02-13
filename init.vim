@@ -78,7 +78,7 @@ function! PackInit() abort
     call minpac#add('mhinz/vim-signify')
 
     " Yank history navigation
-    call minpac#add('vim-scripts/YankRing.vim')
+    call minpac#add('bfredl/nvim-miniyank')
 
     call minpac#add('myusuf3/numbers.vim')
 
@@ -203,6 +203,7 @@ let NERDTreeIgnore = [
             \'dist', '\.lock$', '\.ipython$', '\.mypy_cache$',
             \'\.pytest_cache$', '\.vscode$', '\.tern-port$',
             \'\.coverage$', '\.git$', '\.gitattributes$',
+	    \'\.egg-info$', '\.venv$',
             \]
 
 " Open automatically if no file is specified
@@ -320,12 +321,16 @@ highlight SignifySignChange cterm=bold ctermbg=237  ctermfg=227
 "  mode)
 let g:AutoClosePumvisible = {"ENTER": "\<C-Y>", "ESC": "\<ESC>"}
 
-" Yankring -------------------------------
+" nvim-miniyank ------------------------
+set clipboard=unnamedplus
 
-" Fix for yankring and neovim problem when system has non-text things copied
-" in clipboard
-let g:yankring_clipboard_monitor = 0
-let g:yankring_history_dir = '~/.config/nvim/'
+map p <Plug>(miniyank-autoput)
+map P <Plug>(miniyank-autoPut)
+
+map <leader>p <Plug>(miniyank-startput)
+map <leader>P <Plug>(miniyank-startPut)
+map <leader>n <Plug>(miniyank-cycle)
+map <leader>N <Plug>(miniyank-cycleback)
 
 " Airline ------------------------------
 let g:airline#extensions#whitespace#enabled = 0
@@ -348,9 +353,6 @@ set hlsearch
 set noswapfile
 set nobackup
 set nowritebackup
-
-" Yank to the system clipboard (requires the xsel system package)
-set clipboard=unnamedplus
 
 " File formats
 
