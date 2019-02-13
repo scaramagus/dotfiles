@@ -54,4 +54,3 @@ ensure_tmux_is_running
 
 #Per machine configuration, we dont share this
 source_file "$HOME/.bash_local"
-
