@@ -25,7 +25,7 @@ VENV_PREFIX="("
 VENV_SUFFIX=")"
 
 PYTHON_LOGO="\ue73c"
-JS_LOGO="\ue74e"
+NODE_LOGO="\ue74e"
 USER_LOGO="\uf007"
 DIR_LOGO="\ue5fe"
 GIT_LOGO="\ue725"
@@ -53,12 +53,12 @@ _get_nodejs_prompt() {
         local JS_VER=$(node -v)
     fi
     if [ "$JS_VER" != "" ]; then
-        echo "${WHITE_B}${JS_LOGO} ${JS_VER:1}"
+        echo "${WHITE_B}${NODE_LOGO} ${JS_VER:1}"
     fi
 }
 
 _get_git_prompt() {
-	local GIT_STATUS=$(__git_ps1 "%s") 
+	local GIT_STATUS=$(__git_ps1 "%s")
 	[ ! -z "$GIT_STATUS" ] && echo "${CYAN}$GIT_LOGO $GIT_STATUS  "
 }
 
