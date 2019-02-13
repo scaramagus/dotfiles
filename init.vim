@@ -80,8 +80,6 @@ function! PackInit() abort
     " Yank history navigation
     call minpac#add('vim-scripts/YankRing.vim')
 
-    " Linters
-    call minpac#add('w0rp/ale')
     call minpac#add('myusuf3/numbers.vim')
 
     call minpac#add('blueyed/vim-diminactive')
@@ -92,20 +90,18 @@ function! PackInit() abort
 
     call minpac#add('tiagofumo/vim-nerdtree-syntax-highlight')
 
+    call minpac#add('w0rp/ale')
+
     " Always load vim-devicons last!!!"
     call minpac#add('ryanoasis/vim-devicons')
 endfunction
 
 " Packages needed to load on startup (due to config modifications down below)
-"packadd neomake
 packadd local-npm-bin.vim
 
 " ============================================================================
 " Vim settings and mappings
 " You can edit them as you wish
-
-" Disable checking for preprocessors (to avoid massive slow downs)
-" let g:vue_disable_pre_processors=1
 
 " Set python interpreter to editor's own virtualenv (to isolate dependencies)"
 let g:python_host_prog = '/home/agustin/.pyenv/versions/neovim2/bin/python'
@@ -157,12 +153,6 @@ nnoremap <c-k> <c-w>k
 nnoremap <c-h> <c-w>h
 nnoremap <c-l> <c-w>l
 
-" needed so deoplete can auto select the first suggestion
-set completeopt+=noinsert
-" comment this line to enable autocompletion preview window
-" (displays documentation related to the selected completion option)
-set completeopt-=preview
-
 " autocompletion of files and commands behaves like shell
 " (complete only the common part, list the options that match)
 set wildmode=list:longest
@@ -186,10 +176,6 @@ nnoremap <silent> // :noh<CR>
 " clear empty spaces at the end of lines on save of python files
 autocmd BufWritePre *.py :%s/\s\+$//e
 
-" fix problems with uncommon shells (fish, xonsh) and plugins running commands
-" (neomake, ...)
-set shell=/bin/bash
-
 " ============================================================================
 " Plugins settings and mappings
 " Edit them as you wish.
@@ -212,7 +198,12 @@ nmap ,t :NERDTreeFind<CR>
 let NERDTreeShowHidden = 1
 
 " don;t show these file types
-let NERDTreeIgnore = ['\.pyc$', '\.pyo$', '__pycache__', 'node_modules', 'dist', '\.lock$', '\.ipython$', '\.mypy_cache$', '\.pytest_cache$', '\.vscode$', '\.tern-port$', '\.coverage$', '\.git$', '\.gitattributes$']
+let NERDTreeIgnore = [
+            \'\.pyc$', '\.pyo$', '__pycache__', 'node_modules',
+            \'dist', '\.lock$', '\.ipython$', '\.mypy_cache$',
+            \'\.pytest_cache$', '\.vscode$', '\.tern-port$',
+            \'\.coverage$', '\.git$', '\.gitattributes$',
+            \]
 
 " Open automatically if no file is specified
 autocmd StdinReadPre * let s:std_in=1
@@ -221,9 +212,11 @@ autocmd VimEnter * if argc() == 0 && !exists("s:std_in") | NERDTree | endif
 " Close if the only open window is NERDTREE
 autocmd BufEnter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
 
-" Enable folder icons for NERDTree and correct color
+" Enable folder icons
 let g:WebDevIconsUnicodeDecorateFolderNodes = 1
 let g:DevIconsEnableFoldersOpenClose = 1
+
+" Fix directory colors
 highlight! link NERDTreeFlags NERDTreeDir
 
 " Remove expandable arrow
@@ -235,6 +228,7 @@ let NERDTreeNodeDelimiter = "\x07"
 
 " Remove trailing slash from dir nodes
 autocmd FileType nerdtree setlocal conceallevel=3 | syntax match NERDTreeDirSlash #/$# containedin=NERDTreeDir conceal contained
+
 " Tasklist ------------------------------
 
 " show pending tasks list
@@ -261,7 +255,7 @@ let g:ale_completion_enabled = 1
 packadd ale
 
 " Set symbols
-let g:ale_sign_error = '✘'
+let g:ale_sign_error = ''
 let g:ale_sign_warning = '⚠'
 
 " Define linters
