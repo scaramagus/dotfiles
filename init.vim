@@ -10,13 +10,11 @@ function! PackInit() abort
 
     " Additional plugins here.
 
+    " Gruvbox color scheme
     call minpac#add('morhetz/gruvbox')
 
-    " Override configs by directory
-    call minpac#add('arielrossanigo/dir-configs-override.vim')
-
     " Code commenter
-    call minpac#add('scrooloose/nerdcommenter')
+    call minpac#add('tpope/vim-commentary')
 
     " Better file browser
     call minpac#add('scrooloose/nerdtree')
@@ -29,6 +27,9 @@ function! PackInit() abort
     " Search results counter
     call minpac#add('vim-scripts/IndexedSearch')
 
+    " Adjust tab settings based on current file
+    call minpac#add('tpope/vim-sleuth')
+
     " Airline
     call minpac#add('vim-airline/vim-airline')
     call minpac#add('vim-airline/vim-airline-themes')
@@ -40,7 +41,7 @@ function! PackInit() abort
     call minpac#add('fisadev/FixedTaskList.vim')
 
     " Automatically close parenthesis, etc
-    call minpac#add('Townk/vim-autoclose')
+    call minpac#add('jiangmiao/auto-pairs')
 
     " Surround
     call minpac#add('tpope/vim-surround')
@@ -50,6 +51,12 @@ function! PackInit() abort
 
     " Indentation based movements
     call minpac#add('jeetsukumaran/vim-indentwise')
+
+    " Better f-t mappings
+    call minpac#add('rhysd/clever-f.vim')
+
+    " Add more text objects for targets
+    call minpac#add('wellle/targets.vim')
 
     " Better language packs
     call minpac#add('sheerun/vim-polyglot')

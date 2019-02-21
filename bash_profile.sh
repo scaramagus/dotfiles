@@ -39,18 +39,6 @@ export NVM_DIR="$HOME/.nvm"
 source_file "$NVM_DIR/nvm.sh"
 source_file "$NVM_DIR/bash_completion"
 
-# Start a new session with every new shell
-_not_inside_tmux() {
-    [[ -z "$TMUX" ]]
-}
-
-ensure_tmux_is_running() {
-  if _not_inside_tmux; then
-    tat
-  fi
-}
-
-ensure_tmux_is_running
 
 #Per machine configuration, we dont share this
 source_file "$HOME/.bash_local"
