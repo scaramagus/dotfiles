@@ -21,8 +21,6 @@ function! PackInit() abort
 
     " Class/module browser
     call minpac#add('majutsushi/tagbar')
-    " TODO known problems:
-    " * current block not refreshing
 
     " Search results counter
     call minpac#add('vim-scripts/IndexedSearch')
@@ -63,11 +61,9 @@ function! PackInit() abort
 
     " Ack code search (requires ack installed in the system)
     call minpac#add('mileszs/ack.vim')
-    " TODO is there a way to prevent the progress which hides the editor?
 
     " Paint css colors with the real color
     call minpac#add('lilydjwg/colorizer')
-    " TODO is there a better option for neovim?
 
     " Window chooser
     call minpac#add('t9md/vim-choosewin')
