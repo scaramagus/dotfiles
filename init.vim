@@ -18,6 +18,7 @@ function! PackInit() abort
 
     " Better file browser
     call minpac#add('scrooloose/nerdtree')
+    call minpac#add('tiagofumo/vim-nerdtree-syntax-highlight')
 
     " Class/module browser
     call minpac#add('majutsushi/tagbar')
@@ -90,8 +91,6 @@ function! PackInit() abort
 
     call minpac#add('christoomey/vim-tmux-navigator')
     call minpac#add('christoomey/vim-tmux-runner')
-
-    call minpac#add('tiagofumo/vim-nerdtree-syntax-highlight')
 
     call minpac#add('w0rp/ale')
 
@@ -233,6 +232,14 @@ let NERDTreeNodeDelimiter = "\x07"
 " Remove trailing slash from dir nodes
 autocmd FileType nerdtree setlocal conceallevel=3 | syntax match NERDTreeDirSlash #/$# containedin=NERDTreeDir conceal contained
 
+" Autorefresh on tree focus
+function! NERDTreeRefresh()
+    if &filetype == "nerdtree"
+        silent exe substitute(mapcheck("R"), "<CR>", "", "")
+    endif
+endfunction
+
+autocmd BufEnter * call NERDTreeRefresh()
 " Tasklist ------------------------------
 
 " show pending tasks list
