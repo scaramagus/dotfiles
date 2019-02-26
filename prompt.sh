@@ -64,7 +64,7 @@ _get_git_prompt() {
     [ ! -z "$GIT_STATUS" ] && echo "${CYAN}$GIT_LOGO $GIT_STATUS  "
 }
 
-# TODO: Add toggling of private key?
+# TODO: Add toggling of private key? Add icon for no key added?
 _get_ssh_prompt() {
     local PUBLIC_KEY_PATH=$(find ~/.ssh/*.pub -exec grep -l "$(ssh-add -L)" "{}" +)
     local CURRENT_ID=$(basename "${PUBLIC_KEY_PATH/.pub/}")
