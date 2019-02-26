@@ -59,6 +59,7 @@ function! PackInit() abort
 
     " Better language packs
     call minpac#add('sheerun/vim-polyglot')
+    call minpac#add('ekalinin/Dockerfile.vim')
 
     " Ack code search (requires ack installed in the system)
     call minpac#add('mileszs/ack.vim')
