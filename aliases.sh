@@ -51,3 +51,4 @@ alias lr='ls -lR'          # recursive ls
 alias c='pygmentize -O style=monokai -f console256 -g'
 
 alias dc='docker-compose'
+alias dcl='dc -f local.yml'
