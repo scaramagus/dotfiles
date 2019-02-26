@@ -29,6 +29,8 @@ NODE_LOGO="\ue74e"
 USER_LOGO="\uf007"
 DIR_LOGO="\ue5fe"
 GIT_LOGO="\ue725"
+SSH_LOGO="\uf13e"
+
 
 _get_virtualenv_prompt() {
     if [ -n "$VIRTUAL_ENV" ]; then
@@ -44,8 +46,8 @@ _get_virtualenv_prompt() {
 }
 
 _get_python_version() {
-	local PY_VER=$(python --version 2>&1)
-	echo "${YELLOW_B}$PYTHON_LOGO ${PY_VER:7}"
+    local PY_VER=$(python --version 2>&1)
+    echo "${YELLOW_B}$PYTHON_LOGO ${PY_VER:7}"
 }
 
 _get_nodejs_prompt() {
@@ -58,12 +60,19 @@ _get_nodejs_prompt() {
 }
 
 _get_git_prompt() {
-	local GIT_STATUS=$(__git_ps1 "%s")
-	[ ! -z "$GIT_STATUS" ] && echo "${CYAN}$GIT_LOGO $GIT_STATUS  "
+    local GIT_STATUS=$(__git_ps1 "%s")
+    [ ! -z "$GIT_STATUS" ] && echo "${CYAN}$GIT_LOGO $GIT_STATUS  "
+}
+
+# TODO: Add toggling of private key?
+_get_ssh_prompt() {
+    local PUBLIC_KEY_PATH=$(find ~/.ssh/*.pub -exec grep -l "$(ssh-add -L)" "{}" +)
+    local CURRENT_ID=$(basename "${PUBLIC_KEY_PATH/.pub/}")
+    [ ! -z "$PUBLIC_KEY_PATH" ] && [ ! -z "$CURRENT_ID" ] && echo " ${BLUE}$SSH_LOGO $CURRENT_ID "
 }
 
 prompt_command() {
-	PS1=$(echo -e "${PURPLE}${USER_LOGO} \u  $(_get_python_version) $(_get_virtualenv_prompt) $(_get_nodejs_prompt)  $(_get_git_prompt)${BLUE}$DIR_LOGO \w\n${GREEN_B}$\[\033[00m\] ")
+    PS1=$(echo -e "${PURPLE}${USER_LOGO} \u $(_get_ssh_prompt) $(_get_python_version) $(_get_virtualenv_prompt) $(_get_nodejs_prompt)  $(_get_git_prompt)${PURPLE_B}$DIR_LOGO \w\n${GREEN_B}$\[\033[00m\] ")
 }
 
 # Set the prompt
