@@ -23,6 +23,9 @@ alias h='history'
 #Crons
 alias allcrons='for user in $(cut -f1 -d: /etc/passwd); do sudo echo $user; sudo crontab -u $user -l; done'
 
+# Tmux
+alias tmux='tmux -2 $@'
+
 #-----------------------
 # Move around the FS
 #-----------------------

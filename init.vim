@@ -120,9 +120,6 @@ nnoremap <space> za
 "This unsets the last search pattern register by hitting return
 nnoremap <CR> :noh<CR><CR>
 
-" show line numbers
-set nu
-
 " remove ugly vertical lines on window division
 set fillchars+=vert:\
 
@@ -195,7 +192,7 @@ let g:tagbar_autofocus = 1
 " toggle nerdtree display
 map <F3> :NERDTreeToggle<CR>
 " open nerdtree with the current file selected
-nmap ,t :NERDTreeFind<CR>
+nmap ,<F3> :NERDTreeFind<CR>
 
 " Show hidden files
 let NERDTreeShowHidden = 1
@@ -206,7 +203,7 @@ let NERDTreeIgnore = [
             \'dist', '\.lock$', '\.ipython$', '\.mypy_cache$',
             \'\.pytest_cache$', '\.vscode$', '\.tern-port$',
             \'\.coverage$', '\.git$', '\.gitattributes$',
-	    \'\.egg-info$', '\.venv$',
+	    \'\.egg-info$', 'venv',
             \]
 
 " Open automatically if no file is specified
@@ -230,9 +227,6 @@ let NERDTreeDirArrowExpandable = "\u00a0"
 let NERDTreeDirArrowCollapsible = "\u00a0"
 let NERDTreeNodeDelimiter = "\x07"
 
-" Remove trailing slash from dir nodes
-autocmd FileType nerdtree setlocal conceallevel=3 | syntax match NERDTreeDirSlash #/$# containedin=NERDTreeDir conceal contained
-
 " Autorefresh on tree focus
 function! NERDTreeRefresh()
     if &filetype == "nerdtree"
@@ -249,17 +243,21 @@ map <F2> :TaskList<CR>
 " Fzf ------------------------------
 
 " file finder mapping
-nmap ,e :Files<CR>
+nmap ,f :Files<CR>
 " tags (symbols) in current file finder mapping
-nmap ,g :BTag<CR>
+nmap ,T :BTag<CR>
 " tags (symbols) in all files finder mapping
-nmap ,G :Tag<CR>
+nmap ,t :Tags<CR>
 " general code finder in current file mapping
-nmap ,f :BLines<CR>
+nmap ,L :BLines<CR>
 " general code finder in all files mapping
-nmap ,F :Lines<CR>
+nmap ,l :Lines<CR>
 " commands finder mapping
 nmap ,c :Commands<CR>
+" recursive grep
+nmap ,a :Ag<CR>
+" recursive grep current word
+nmap ,aw :Ag <C-R><C-W><CR>
 
 " ALE ------------------------
 " Enable autocompletion (must be set before loading ALE)
@@ -273,15 +271,13 @@ let g:ale_sign_warning = '⚠'
 " Define linters
 let g:ale_linters_explicit = 1
 let g:ale_linters = {
-            \'python': ['pyls', 'pylint', 'mypy', 'isort'],
+            \'python': ['pyls', 'flake8', 'pylint', 'mypy', 'isort'],
             \'javascript': ['eslint'],
             \}
 
 " Define fixers
 let g:ale_fixers = {
             \'*': ['remove_trailing_lines', 'trim_whitespace'],
-            \'python': ['black', 'isort'],
-            \'javascript': ['eslint'],
             \}
 let g:ale_fix_on_save = 1
 
@@ -294,11 +290,6 @@ let g:ale_echo_msg_format = '[%linter%] %s'
 
 "" Go to definition in new split
 nmap ,D <CR>:call ALEGoToDefinitionInSplit<CR>
-
-" Ack.vim ------------------------------
-" mappings
-nmap ,r :Ack
-nmap ,wr :Ack <cword><CR>
 
 " Window Chooser ------------------------------
 
