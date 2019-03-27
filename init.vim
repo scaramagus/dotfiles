@@ -203,7 +203,7 @@ let NERDTreeIgnore = [
             \'dist', '\.lock$', '\.ipython$', '\.mypy_cache$',
             \'\.pytest_cache$', '\.vscode$', '\.tern-port$',
             \'\.coverage$', '\.git$', '\.gitattributes$',
-	    \'\.egg-info$', 'venv',
+	    \'\.egg-info$', 'venv$', 'tags$', 'env$', '\.sqlite3$'
             \]
 
 " Open automatically if no file is specified
@@ -428,9 +428,9 @@ au BufRead,BufNewFile *.xml let b:comment_leader = '<!--'
 " HTML
 au BufRead,BufNewFile *.html set filetype=html
 au BufRead,BufNewFile *.html set expandtab
-au BufRead,BufNewFile *.html set tabstop=2
-au BufRead,BufNewFile *.html set softtabstop=2
-au BufRead,BufNewFile *.html set shiftwidth=2
+au BufRead,BufNewFile *.html set tabstop=4
+au BufRead,BufNewFile *.html set softtabstop=4
+au BufRead,BufNewFile *.html set shiftwidth=4
 au BufRead,BufNewFile *.html set autoindent
 au BufRead,BufNewFile *.html match BadWhitespace /^\t\+/
 au BufRead,BufNewFile *.html match BadWhitespace /\s\+$/
