@@ -133,9 +133,6 @@ set background=dark
 " Hide default bottom line (useless with airline) "
 set noshowmode
 
-" Show powerline symbols in status bar "
-let g:airline_powerline_fonts=1
-
 " Show relative linenumbers"
 set number
 set relativenumber
@@ -244,20 +241,24 @@ map <F2> :TaskList<CR>
 
 " file finder mapping
 nmap ,f :Files<CR>
+
 " tags (symbols) in current file finder mapping
 nmap ,T :BTag<CR>
 " tags (symbols) in all files finder mapping
 nmap ,t :Tags<CR>
+
 " general code finder in current file mapping
 nmap ,L :BLines<CR>
 " general code finder in all files mapping
 nmap ,l :Lines<CR>
+
 " commands finder mapping
 nmap ,c :Commands<CR>
+
 " recursive grep
 nmap ,a :Ag<CR>
 " recursive grep current word
-nmap ,aw :Ag <C-R><C-W><CR>
+nmap ,w :Ag <C-R><C-W><CR>
 
 " ALE ------------------------
 " Enable autocompletion (must be set before loading ALE)
@@ -281,15 +282,20 @@ let g:ale_fixers = {
             \}
 let g:ale_fix_on_save = 1
 
-" Show errors in status bar
-let g:airline#extensions#ale#enabled = 1
-
 " Error message format
 let g:ale_echo_msg_error_str = 'E'
 let g:ale_echo_msg_format = '[%linter%] %s'
 
 "" Go to definition in new split
-nmap ,D <CR>:call ALEGoToDefinitionInSplit<CR>
+nmap ,D :ALEGoToDefinitionInSplit<CR>
+
+" vim-airline --------------------------
+
+" Show errors in status bar
+let g:airline#extensions#ale#enabled = 1
+
+" Show powerline symbols in status bar "
+let g:airline_powerline_fonts=1
 
 " Window Chooser ------------------------------
 
