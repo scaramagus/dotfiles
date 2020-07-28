@@ -11,6 +11,8 @@
 	decorate = full
 [alias]
 	hist = log --graph --pretty=format:'%C(yellow)%h%Creset \\-%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset'
+[push]
+	default = current
 [color]
 	ui = true
 [color "status"]
@@ -20,11 +22,9 @@
 [color "branch"]
 	current = green reverse #yellow reverse
 	local = yellow bold
-    remote = red bold
+	remote = red bold
 [color "diff"]
-    meta = yellow bold
-    frag = magenta bold
-    old = red bold
-    new = green bold
-[push]
-	default = current
+	meta = yellow bold
+	frag = magenta bold
+	old = red bold
+	new = green bold

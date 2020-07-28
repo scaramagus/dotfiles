@@ -90,10 +90,7 @@ function! PackInit() abort
     call minpac#add('blueyed/vim-diminactive')
     call minpac#add('benjie/local-npm-bin.vim')
 
-    call minpac#add('christoomey/vim-tmux-navigator')
-    call minpac#add('christoomey/vim-tmux-runner')
-
-    call minpac#add('w0rp/ale')
+    call minpac#add('neoclide/coc.nvim', {'branch': 'release', 'do': './install.sh'})
 
     " Always load vim-devicons last!!!"
     call minpac#add('ryanoasis/vim-devicons')
@@ -196,11 +193,12 @@ let NERDTreeShowHidden = 1
 
 " don;t show these file types
 let NERDTreeIgnore = [
-            \'\.pyc$', '\.pyo$', '__pycache__', 'node_modules',
-            \'dist', '\.lock$', '\.ipython$', '\.mypy_cache$',
+            \'\.pyc$', '\.pyo$', '__pycache__', 'node_modules', 'build$',
+            \'dist$', '\.lock$', '\.ipython$', '\.mypy_cache$',
             \'\.pytest_cache$', '\.vscode$', '\.tern-port$',
             \'\.coverage$', '\.git$', '\.gitattributes$',
-	    \'\.egg-info$', 'venv$', 'tags$', 'env$', '\.sqlite3$'
+	    \'\.egg-info$', 'venv$', 'tags$', 'env$', '\.sqlite3$',
+            \'\.o$',
             \]
 
 " Open automatically if no file is specified
@@ -237,6 +235,134 @@ autocmd BufEnter * call NERDTreeRefresh()
 " show pending tasks list
 map <F2> :TaskList<CR>
 
+" coc.nvim -----------------------------------
+" if hidden is not set, TextEdit might fail.
+set hidden
+
+" Some servers have issues with backup files, see #649
+set nobackup
+set nowritebackup
+
+" You will have bad experience for diagnostic messages when it's default 4000.
+set updatetime=300
+
+" don't give |ins-completion-menu| messages.
+set shortmess+=c
+
+" always show signcolumns
+set signcolumn=yes
+
+" Use tab for trigger completion with characters ahead and navigate.
+" Use command ':verbose imap <tab>' to make sure tab is not mapped by other plugin.
+inoremap <silent><expr> <TAB>
+      \ pumvisible() ? "\<C-n>" :
+      \ <SID>check_back_space() ? "\<TAB>" :
+      \ coc#refresh()
+inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
+
+function! s:check_back_space() abort
+  let col = col('.') - 1
+  return !col || getline('.')[col - 1]  =~# '\s'
+endfunction
+
+let g:coc_global_extensions = ['coc-explorer', 'coc-json', 'coc-tsserver', 'coc-tslint-plugin', 'coc-highlight', 'coc-snippets', 'coc-template', 'coc-html', 'coc-css', 'coc-emmet', 'coc-python', 'coc-phpls', 'coc-angular', 'coc-git']
+let g:coc_global_extensions += ['https://github.com/andys8/vscode-jest-snippets']
+
+" Use <c-space> to trigger completion.
+inoremap <silent><expr> <c-space> coc#refresh()
+
+" Use <cr> to confirm completion, `<C-g>u` means break undo chain at current position.
+" Coc only does snippet and additional edit on confirm.
+inoremap <expr> <cr> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
+
+" Use `[c` and `]c` to navigate diagnostics
+nmap <silent> [c <Plug>(coc-diagnostic-prev)
+nmap <silent> ]c <Plug>(coc-diagnostic-next)
+
+" Remap keys for gotos
+nmap <silent> gd <Plug>(coc-definition)
+nmap <silent> gy <Plug>(coc-type-definition)
+nmap <silent> gi <Plug>(coc-implementation)
+nmap <silent> gr <Plug>(coc-references)
+
+" Use K to show documentation in preview window
+nnoremap <silent> K :call <SID>show_documentation()<CR>
+
+function! s:show_documentation()
+  if (index(['vim','help'], &filetype) >= 0)
+    execute 'h '.expand('<cword>')
+  else
+    call CocAction('doHover')
+  endif
+endfunction
+
+" Highlight symbol under cursor on CursorHold
+autocmd CursorHold * silent call CocActionAsync('highlight')
+
+" Remap for rename current word
+nmap <leader>rn <Plug>(coc-rename)
+
+" Remap for format selected region
+xmap <leader>f  <Plug>(coc-format-selected)
+nmap <leader>f  <Plug>(coc-format-selected)
+
+augroup mygroup
+  autocmd!
+  " Setup formatexpr specified filetype(s).
+  autocmd FileType typescript,json setl formatexpr=CocAction('formatSelected')
+  " Update signature help on jump placeholder
+  autocmd User CocJumpPlaceholder call CocActionAsync('showSignatureHelp')
+augroup end
+
+" Remap for do codeAction of selected region, ex: `<leader>aap` for current paragraph
+xmap <leader>a  <Plug>(coc-codeaction-selected)
+nmap <leader>a  <Plug>(coc-codeaction-selected)
+
+" Remap for do codeAction of current line
+nmap <leader>ac  <Plug>(coc-codeaction)
+" Fix autofix problem of current line
+nmap <leader>qf  <Plug>(coc-fix-current)
+
+" Use <tab> for select selections ranges, needs server support, like: coc-tsserver, coc-python
+nmap <silent> <TAB> <Plug>(coc-range-select)
+xmap <silent> <TAB> <Plug>(coc-range-select)
+xmap <silent> <S-TAB> <Plug>(coc-range-select-backword)
+
+" Use `:Format` to format current buffer
+command! -nargs=0 Format :call CocAction('format')
+
+" Use `:Fold` to fold current buffer
+command! -nargs=? Fold :call     CocAction('fold', <f-args>)
+
+" use `:OR` for organize import of current buffer
+command! -nargs=0 OR   :call     CocAction('runCommand', 'editor.action.organizeImport')
+
+" Add status line support, for integration with other plugin, checkout `:h coc-status`
+set statusline^=%{coc#status()}%{get(b:,'coc_current_function','')}
+
+" vim-airline integration
+let g:airline#extensions#coc#enabled = 1
+let airline#extensions#coc#error_symbol = 'E:'
+let airline#extensions#coc#warning_symbol = 'W:'
+
+" Using CocList
+" Show all diagnostics
+nnoremap <silent> <space>a  :<C-u>CocList diagnostics<cr>
+" Manage extensions
+nnoremap <silent> <space>e  :<C-u>CocList extensions<cr>
+" Show commands
+nnoremap <silent> <space>c  :<C-u>CocList commands<cr>
+" Find symbol of current document
+nnoremap <silent> <space>o  :<C-u>CocList outline<cr>
+" Search workspace symbols
+nnoremap <silent> <space>s  :<C-u>CocList -I symbols<cr>
+" Do default action for next item.
+nnoremap <silent> <space>j  :<C-u>CocNext<CR>
+" Do default action for previous item.
+nnoremap <silent> <space>k  :<C-u>CocPrev<CR>
+" Resume latest coc list
+nnoremap <silent> <space>p  :<C-u>CocListResume<CR>
+
 " Fzf ------------------------------
 
 " file finder mapping
@@ -259,43 +385,6 @@ nmap ,c :Commands<CR>
 nmap ,a :Ag<CR>
 " recursive grep current word
 nmap ,w :Ag <C-R><C-W><CR>
-
-" ALE ------------------------
-" Enable autocompletion (must be set before loading ALE)
-let g:ale_completion_enabled = 1
-packadd ale
-
-" Set symbols
-let g:ale_sign_error = ''
-let g:ale_sign_warning = '⚠'
-
-" Define linters
-let g:ale_linters_explicit = 1
-let g:ale_linters = {
-            \'python': ['pyls', 'flake8', 'pylint', 'mypy', 'isort'],
-            \'javascript': ['eslint'],
-            \}
-
-" Define fixers
-let g:ale_fixers = {
-            \'*': ['remove_trailing_lines', 'trim_whitespace'],
-            \}
-let g:ale_fix_on_save = 1
-
-" Error message format
-let g:ale_echo_msg_error_str = 'E'
-let g:ale_echo_msg_format = '[%linter%] %s'
-
-"" Go to definition in new split
-nmap ,D :ALEGoToDefinitionInSplit<CR>
-
-" vim-airline --------------------------
-
-" Show errors in status bar
-let g:airline#extensions#ale#enabled = 1
-
-" Show powerline symbols in status bar "
-let g:airline_powerline_fonts=1
 
 " Window Chooser ------------------------------
 
@@ -352,6 +441,8 @@ nnoremap <leader>= :wincmd =<cr>
 
 syntax on
 set autoindent
+set tabstop=4
+set softtabstop=4
 filetype plugin on
 filetype indent on
 highlight BadWhitespace ctermbg=red guibg=red
@@ -361,98 +452,6 @@ set hlsearch
 set noswapfile
 set nobackup
 set nowritebackup
-
-" File formats
-
-" C
-au BufRead,BufNewFile *.c,*.h set expandtab
-au BufRead,BufNewFile *.c,*.h set tabstop=4
-au BufRead,BufNewFile *.c,*.h set shiftwidth=4
-au BufRead,BufNewFile *.c,*.h set autoindent
-au BufRead,BufNewFile *.c,*.h match BadWhitespace /^\t\+/
-au BufRead,BufNewFile *.c,*.h match BadWhitespace /\s\+$/
-au         BufNewFile *.c,*.h set fileformat=unix
-au BufRead,BufNewFile *.c,*.h let b:comment_leader = '/* '
-
-" Java
-au BufRead,BufNewFile *.java set expandtab
-au BufRead,BufNewFile *.java set tabstop=4
-au BufRead,BufNewFile *.java set shiftwidth=4
-au BufRead,BufNewFile *.java set autoindent
-au BufRead,BufNewFile *.java match BadWhitespace /^\t\+/
-au BufRead,BufNewFile *.java match BadWhitespace /\s\+$/
-au         BufNewFile *.java set fileformat=unix
-au BufRead,BufNewFile *.java let b:comment_leader = '//'
-
-" Python, PEP-008
-au BufRead,BufNewFile *.py,*.pyw set expandtab
-au BufRead,BufNewFile *.py,*.pyw set textwidth=139
-au BufRead,BufNewFile *.py,*.pyw set tabstop=4
-au BufRead,BufNewFile *.py,*.pyw set softtabstop=4
-au BufRead,BufNewFile *.py,*.pyw set shiftwidth=4
-au BufRead,BufNewFile *.py,*.pyw set autoindent
-au BufRead,BufNewFile *.py,*.pyw match BadWhitespace /^\t\+/
-au BufRead,BufNewFile *.py,*.pyw match BadWhitespace /\s\+$/
-au         BufNewFile *.py,*.pyw set fileformat=unix
-au BufRead,BufNewFile *.py,*.pyw let b:comment_leader = '#'
-
-" JS
-au BufRead,BufNewFile *.js set expandtab
-au BufRead,BufNewFile *.js set tabstop=2
-au BufRead,BufNewFile *.js set softtabstop=2
-au BufRead,BufNewFile *.js set shiftwidth=2
-au BufRead,BufNewFile *.js set autoindent
-au BufRead,BufNewFile *.js match BadWhitespace /^\t\+/
-au BufRead,BufNewFile *.js match BadWhitespace /\s\+$/
-au         BufNewFile *.js set fileformat=unix
-au BufRead,BufNewFile *.js let b:comment_leader = '//'
-
-" JSON
-au BufRead,BufNewFile *.json set expandtab
-au BufRead,BufNewFile *.json set tabstop=4
-au BufRead,BufNewFile *.json set softtabstop=4
-au BufRead,BufNewFile *.json set shiftwidth=4
-au BufRead,BufNewFile *.json set autoindent
-au BufRead,BufNewFile *.json match BadWhitespace /^\t\+/
-au BufRead,BufNewFile *.json match BadWhitespace /\s\+$/
-au         BufNewFile *.json set fileformat=unix
-
-" Makefile
-au BufRead,BufNewFile Makefile* set noexpandtab
-
-" XML
-au BufRead,BufNewFile *.xml set expandtab
-au BufRead,BufNewFile *.xml set tabstop=4
-au BufRead,BufNewFile *.xml set softtabstop=4
-au BufRead,BufNewFile *.xml set shiftwidth=4
-au BufRead,BufNewFile *.xml set autoindent
-au BufRead,BufNewFile *.xml match BadWhitespace /^\t\+/
-au BufRead,BufNewFile *.xml match BadWhitespace /\s\+$/
-au         BufNewFile *.xml set fileformat=unix
-au BufRead,BufNewFile *.xml let b:comment_leader = '<!--'
-
-" HTML
-au BufRead,BufNewFile *.html set filetype=html
-au BufRead,BufNewFile *.html set expandtab
-au BufRead,BufNewFile *.html set tabstop=4
-au BufRead,BufNewFile *.html set softtabstop=4
-au BufRead,BufNewFile *.html set shiftwidth=4
-au BufRead,BufNewFile *.html set autoindent
-au BufRead,BufNewFile *.html match BadWhitespace /^\t\+/
-au BufRead,BufNewFile *.html match BadWhitespace /\s\+$/
-au         BufNewFile *.html set fileformat=unix
-au BufRead,BufNewFile *.html let b:comment_leader = '<!--'
-
-" Vue
-au BufRead,BufNewFile *.vue set filetype=html
-au BufRead,BufNewFile *.vue set expandtab
-au BufRead,BufNewFile *.vue set tabstop=2
-au BufRead,BufNewFile *.vue set softtabstop=2
-au BufRead,BufNewFile *.vue set shiftwidth=2
-au BufRead,BufNewFile *.vue set autoindent
-au BufRead,BufNewFile *.vue match BadWhitespace /^\t\+/
-au BufRead,BufNewFile *.vue match BadWhitespace /\s\+$/
-au         BufNewFile *.vue set fileformat=unix
 
 " Define user commands for updating/cleaning the plugins.
 " Each of them calls PackInit() to load minpac and register
