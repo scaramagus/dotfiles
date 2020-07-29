@@ -1,10 +1,13 @@
 dotfiles
 ========
-My personal dotfiles. Inspired by [malderete's dotfiles.](https://github.com/malderete/dotfiles)
+My personal dotfiles.
 
 ## Requirements
-- Zsh
+- Zsh + oh-my-zsh
 - [Nerdfonts](https://nerdfonts.com/)
+- nvm
+- pyenv
+- alacritty
 
 ## Install
 ```sh

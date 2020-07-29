@@ -1,8 +1,6 @@
-#!/bin/zsh
+#!/bin/sh
 
 # TODO: Add installation of other dependencies (nerdfonts, pyenv, nvm, etc)
-
-BASE_DIR=$(dirname $(readlink -f "${BASH_SOURCE[0]}"))
 
 create_link() {
   if [ ! -f $2 ]; then
@@ -12,11 +10,15 @@ create_link() {
   fi
 }
 
-# Create symlinks
-create_link "$BASE_DIR/gitconfig" ~/.gitconfig
-create_link "$BASE_DIR/.tmux.conf" ~/.tmux.conf
+BASE_DIR=$(dirname $(readlink -f "${BASH_SOURCE[0]}"))
 
-# Copy neovim config file
+# Create symlinks
+create_link "$BASE_DIR/zsh" ~/.zshrc
+create_link "$BASE_DIR/gitconfig" ~/.gitconfig
+create_link "$BASE_DIR/tmux.conf" ~/.tmux.conf
+create_link "$BASE_DIR/alacritty.yml" ~/.alacritty.yml
+
+# Copy neovim config file (a symlink won't do)
 echo "Copying neovim config file..."
 cp "$BASE_DIR/init.vim" ~/.config/nvim/init.vim
 
