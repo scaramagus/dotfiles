@@ -33,7 +33,7 @@ function! PackInit() abort
     call minpac#add('vim-airline/vim-airline')
     call minpac#add('vim-airline/vim-airline-themes')
 
-    call minpac#add('junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' })
+    call minpac#add('junegunn/fzf', { 'dir': '~/.fzf', 'do': { -> fzf#install() } })
     call minpac#add('junegunn/fzf.vim')
 
     " Pending tasks list
@@ -240,6 +240,7 @@ map <F2> :TaskList<CR>
 set hidden
 
 " Some servers have issues with backup files, see #649
+set noswapfile
 set nobackup
 set nowritebackup
 
@@ -447,11 +448,6 @@ filetype plugin on
 filetype indent on
 highlight BadWhitespace ctermbg=red guibg=red
 set hlsearch
-
-" no temp or backup files
-set noswapfile
-set nobackup
-set nowritebackup
 
 " Define user commands for updating/cleaning the plugins.
 " Each of them calls PackInit() to load minpac and register
